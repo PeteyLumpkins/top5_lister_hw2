@@ -13,7 +13,10 @@ export default class Workspace extends React.Component {
                         <div className="item-number">4.</div>
                         <div className="item-number">5.</div>
                     </div>
-                    <EditItems currentList={this.props.currentList}/>
+                    <EditItems 
+                        currentList={this.props.currentList}
+                        updateCurrentListItemCallback={this.props.updateCurrentListItemCallback}
+                    />
                 </div>
             </div>
         )

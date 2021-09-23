@@ -3,6 +3,15 @@ import EditItem from "./EditItem";
 
 export default class EditItems extends React.Component {
 
+
+    handleDragOver = (event) => {
+
+    }
+
+    handleDrop = (event) => {
+
+    }
+
     render() {
         if (this.props.currentList === null) {
             return (<div id="edit-items"></div>);
@@ -15,8 +24,9 @@ export default class EditItems extends React.Component {
                 {
                     ids.map((id) => (
                         <EditItem 
-                        id={id} 
-                        text={this.props.currentList.items[id - 1]}
+                            id={id} 
+                            text={this.props.currentList.items[id - 1]}
+                            updateCurrentListItemCallback={this.props.updateCurrentListItemCallback}
                         />
                     ))
                 }

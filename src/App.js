@@ -131,6 +131,33 @@ class App extends React.Component {
         // NAME PROPERLY DISPLAYS INSIDE THE MODAL
         this.showDeleteListModal();
     }
+
+    // TODO callback to be passed to workspace for editing items in current list
+    updateCurrentListItem = (index, newText) => {
+
+        // Creates copy of currentlist
+        let newList = this.state.currentList
+
+        // Replaces item at given index with new text data
+        newList.items[index] = newText
+
+        // Update the database with the new list
+        this.db.mutationUpdateList(newList);
+
+        // Set the state to that of the new list
+        this.setState(prevState => ({
+            currentList: newList,
+            sessionData: prevState.sessionData
+        }));
+    }
+
+    // TODO callback to be passed to workspace for drag and drop changes
+    swapCurrentListItems(newIndex, oldIndex) {
+        let items = this.state.currentList.items;
+        items.splice(newIndex, 0, items.splice(oldIndex, 1)[0]);
+
+    }
+
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
     showDeleteListModal() {
@@ -158,7 +185,9 @@ class App extends React.Component {
                     renameListCallback={this.renameList}
                 />
                 <Workspace
-                    currentList={this.state.currentList} />
+                    currentList={this.state.currentList} 
+                    updateCurrentListItemCallback={this.updateCurrentListItem}
+                />
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteModal
