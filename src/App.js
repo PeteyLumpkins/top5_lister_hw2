@@ -34,6 +34,7 @@ class App extends React.Component {
             sessionData : loadedSessionData
         }
     }
+
     sortKeyNamePairsByName = (keyNamePairs) => {
         keyNamePairs.sort((keyPair1, keyPair2) => {
             // GET THE LISTS
@@ -241,7 +242,7 @@ class App extends React.Component {
                 <Banner 
                     title='Top 5 Lister'
                     closeCallback={this.closeCurrentList} 
-                    jstps={this.jstps}
+                    jstps={this.tps}
                     redoCallback={this.redo}
                     undoCallback={this.undo}
                 />

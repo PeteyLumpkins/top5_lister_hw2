@@ -229,6 +229,7 @@ input {
   background-color: lightgray;
 }
 
+/* FIXME was disabled:hover */
 .disabled:hover {
   color: var(--swatch-neutral);
 }
