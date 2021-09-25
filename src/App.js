@@ -145,6 +145,18 @@ class App extends React.Component {
         this.showDeleteListModal();
     }
 
+    undo = () => {
+        if (this.tps.hasTransactionToUndo()) {
+            this.tps.undoTransaction();
+        }
+    }
+
+    redo = () => {
+        if (this.tps.hasTransactionToRedo()) {
+            this.tps.doTransaction();
+        }
+    }
+
     addChangeItemTransaction = (index, oldText, newText) => {
         let transaction = new ChangeItem_Transaction(this, index, oldText, newText);
         this.tps.addTransaction(transaction);
@@ -155,7 +167,15 @@ class App extends React.Component {
         this.tps.addTransaction(transaction);
     }
 
-    // Callback to be passed to workspace for editing items in current list
+    /**
+     * Updates the text at the given position in the current list with the given
+     * text. 
+     * 
+     * NOTE: Should only be called by @method addChangeItemTransaction
+     * 
+     * @param {*} index the index of the item in the currentList
+     * @param {*} newText the text we want to update the given index with
+     */
     updateCurrentListItem = (index, newText) => {
 
         // Creates copy of currentlist
@@ -174,7 +194,15 @@ class App extends React.Component {
         }));
     }
 
-    // Callback to be passed to workspace for drag and drop changes
+    /**
+     * Moves the item the position of oldIndex in the current list to the position of 
+     * newIndex in the current list.
+     * 
+     * NOTE: Should only be called by @method addMoveItemTransaction
+     * 
+     * @param {*} newIndex the new index to move the item to
+     * @param {*} oldIndex the old index to move the item from
+     */
     swapCurrentListItems = (newIndex, oldIndex) => {
         let newList = this.state.currentList;
         let newItems = newList.items;
@@ -206,12 +234,17 @@ class App extends React.Component {
         let modal = document.getElementById("delete-modal");
         modal.classList.remove("is-visible");
     }
+
     render() {
         return (
             <div id="app-root">
                 <Banner 
                     title='Top 5 Lister'
-                    closeCallback={this.closeCurrentList} />
+                    closeCallback={this.closeCurrentList} 
+                    jstps={this.jstps}
+                    redoCallback={this.redo}
+                    undoCallback={this.undo}
+                />
                 <Sidebar
                     heading='Your Lists'
                     currentList={this.state.currentList}
@@ -224,7 +257,7 @@ class App extends React.Component {
                 <Workspace
                     currentList={this.state.currentList} 
                     addChangeItemCallback={this.addChangeItemTransaction}
-                    swapCurrentListItemCallback={this.swapCurrentListItems}
+                    addMoveItemCallback={this.addMoveItemTransaction}
                 />
                 <Statusbar 
                     currentList={this.state.currentList} />

@@ -17,10 +17,10 @@ export default class MoveItem_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.app.moveItem(this.oldItemIndex, this.newItemIndex);
+        this.app.swapCurrentListItems(this.oldItemIndex, this.newItemIndex);
     }
     
     undoTransaction() {
-        this.app.moveItem(this.newItemIndex, this.oldItemIndex);
+        this.app.swapCurrentListItems(this.newItemIndex, this.oldItemIndex);
     }
 }

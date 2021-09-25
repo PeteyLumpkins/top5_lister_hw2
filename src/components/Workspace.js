@@ -17,7 +17,7 @@ export default class Workspace extends React.Component {
                     <EditItems 
                         currentList={this.props.currentList}
                         addChangeItemCallback={this.props.addChangeItemCallback}
-                        swapCurrentListItemCallback={this.props.swapCurrentListItemCallback}
+                        addMoveItemCallback={this.props.addMoveItemCallback}
                     />
                 </div>
             </div>

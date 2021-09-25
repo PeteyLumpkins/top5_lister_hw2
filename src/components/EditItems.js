@@ -24,7 +24,7 @@ export default class EditItems extends React.Component {
                             id={id} 
                             text={this.props.currentList.items[id - 1]}
                             addChangeItemCallback={this.props.addChangeItemCallback}
-                            swapCurrentListItemCallback={this.props.swapCurrentListItemCallback}
+                            addMoveItemCallback={this.props.addMoveItemCallback}
                             handleDragOverCallback={this.handleDragOver}
                         />
                     ))

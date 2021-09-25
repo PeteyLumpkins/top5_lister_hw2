@@ -59,7 +59,7 @@ export default class EditItem extends React.Component {
         this.handleDragLeave();
 
         // Change positions of items in the currentList 
-        this.props.swapCurrentListItemCallback(this.props.id - 1, event.dataTransfer.getData("oldIndex"));
+        this.props.addMoveItemCallback(this.props.id - 1, event.dataTransfer.getData("oldIndex"));
     }
 
     render() {
