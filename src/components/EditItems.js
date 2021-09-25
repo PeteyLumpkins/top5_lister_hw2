@@ -1,16 +1,13 @@
 import React from "react";
 import EditItem from "./EditItem";
 
+/**
+ * Represents the items list of the currently selected top-5-list 
+ * in the workspace. Contains the top-5-list items.
+ * 
+ * @author PeteyLumpkins
+ */
 export default class EditItems extends React.Component {
-
-
-    handleDragOver = (event) => {
-
-    }
-
-    handleDrop = (event) => {
-
-    }
 
     render() {
         if (this.props.currentList === null) {
@@ -27,6 +24,8 @@ export default class EditItems extends React.Component {
                             id={id} 
                             text={this.props.currentList.items[id - 1]}
                             updateCurrentListItemCallback={this.props.updateCurrentListItemCallback}
+                            swapCurrentListItemCallback={this.props.swapCurrentListItemCallback}
+                            handleDragOverCallback={this.handleDragOver}
                         />
                     ))
                 }

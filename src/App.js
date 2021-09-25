@@ -151,11 +151,25 @@ class App extends React.Component {
         }));
     }
 
-    // TODO callback to be passed to workspace for drag and drop changes
-    swapCurrentListItems(newIndex, oldIndex) {
-        let items = this.state.currentList.items;
-        items.splice(newIndex, 0, items.splice(oldIndex, 1)[0]);
+    // Callback to be passed to workspace for drag and drop changes
+    swapCurrentListItems = (newIndex, oldIndex) => {
+        let newList = this.state.currentList;
+        let newItems = newList.items;
 
+        // Handles the swaping of the items in the list
+        newItems.splice(newIndex, 0, newItems.splice(oldIndex, 1)[0]);
+
+        // Set the items in the new list
+        newList.items = newItems;
+
+        // Update database with new list
+        this.db.mutationUpdateList(newList);
+
+        // Set state to the new list -> triggers the rendering of workspace with new list
+        this.setState(prevState => ({
+            currentList: newList,
+            sessionData: prevState.sessionData
+        }));
     }
 
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
@@ -187,6 +201,7 @@ class App extends React.Component {
                 <Workspace
                     currentList={this.state.currentList} 
                     updateCurrentListItemCallback={this.updateCurrentListItem}
+                    swapCurrentListItemCallback={this.swapCurrentListItems}
                 />
                 <Statusbar 
                     currentList={this.state.currentList} />

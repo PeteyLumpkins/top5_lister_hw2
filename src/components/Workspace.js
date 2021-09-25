@@ -2,6 +2,7 @@ import React from "react";
 import EditItems from "./EditItems";
 
 export default class Workspace extends React.Component {
+    
     render() {
         return (
             <div id="top5-workspace">
@@ -16,6 +17,7 @@ export default class Workspace extends React.Component {
                     <EditItems 
                         currentList={this.props.currentList}
                         updateCurrentListItemCallback={this.props.updateCurrentListItemCallback}
+                        swapCurrentListItemCallback={this.props.swapCurrentListItemCallback}
                     />
                 </div>
             </div>
