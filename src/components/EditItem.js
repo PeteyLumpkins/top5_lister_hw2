@@ -32,7 +32,7 @@ export default class EditItem extends React.Component {
     }
 
     handleBlur = (event) => {
-        this.props.updateCurrentListItemCallback(this.props.id - 1, event.target.value);
+        this.props.addChangeItemCallback(this.props.id - 1, this.props.text, event.target.value);
         this.handleToggleEdit();
     }
 

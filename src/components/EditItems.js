@@ -23,7 +23,7 @@ export default class EditItems extends React.Component {
                         <EditItem 
                             id={id} 
                             text={this.props.currentList.items[id - 1]}
-                            updateCurrentListItemCallback={this.props.updateCurrentListItemCallback}
+                            addChangeItemCallback={this.props.addChangeItemCallback}
                             swapCurrentListItemCallback={this.props.swapCurrentListItemCallback}
                             handleDragOverCallback={this.handleDragOver}
                         />

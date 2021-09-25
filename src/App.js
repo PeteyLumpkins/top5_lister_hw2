@@ -9,7 +9,11 @@ import DeleteModal from './components/DeleteModal';
 import Banner from './components/Banner.js'
 import Sidebar from './components/Sidebar.js'
 import Workspace from './components/Workspace.js';
-import Statusbar from './components/Statusbar.js'
+import Statusbar from './components/Statusbar.js';
+
+import jsTPS from './jstps/jsTPS.js';
+import ChangeItem_Transaction from './jstps/transactions/ChangeItem_Transaction.js';
+import MoveItem_Transaction from './jstps/transactions/MoveItem_Transaction.js';
 
 class App extends React.Component {
     constructor(props) {
@@ -17,6 +21,9 @@ class App extends React.Component {
 
         // THIS WILL TALK TO LOCAL STORAGE
         this.db = new DBManager();
+
+        // JSTPS WILL MANAGE UNDO AND REDO OPERATIONS LIKE BEFORE 
+        this.tps = new jsTPS();
 
         // GET THE SESSION DATA FROM OUR DATA MANAGER
         let loadedSessionData = this.db.queryGetSessionData();
@@ -33,6 +40,7 @@ class App extends React.Component {
             return keyPair1.name.localeCompare(keyPair2.name);
         });
     }
+
     // THIS FUNCTION BEGINS THE PROCESS OF CREATING A NEW LIST
     createNewList = () => {
         // FIRST FIGURE OUT WHAT THE NEW LIST'S KEY AND NAME WILL BE
@@ -71,6 +79,7 @@ class App extends React.Component {
             this.db.mutationCreateList(newList);
         });
     }
+
     renameList = (key, newName) => {
         let newKeyNamePairs = [...this.state.sessionData.keyNamePairs];
         // NOW GO THROUGH THE ARRAY AND FIND THE ONE TO RENAME
@@ -104,6 +113,7 @@ class App extends React.Component {
             this.db.mutationUpdateSessionData(this.state.sessionData);
         });
     }
+
     // THIS FUNCTION BEGINS THE PROCESS OF LOADING A LIST FOR EDITING
     loadList = (key) => {
         let newCurrentList = this.db.queryGetList(key);
@@ -114,6 +124,7 @@ class App extends React.Component {
             // ANY AFTER EFFECTS?
         });
     }
+
     // THIS FUNCTION BEGINS THE PROCESS OF CLOSING THE CURRENT LIST
     closeCurrentList = () => {
         this.setState(prevState => ({
@@ -121,9 +132,11 @@ class App extends React.Component {
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             sessionData: this.state.sessionData
         }), () => {
-            // ANY AFTER EFFECTS?
+            // Disable undo and redo buttons 
+            // Enable add list button
         });
     }
+
     deleteList = () => {
         // SOMEHOW YOU ARE GOING TO HAVE TO FIGURE OUT
         // WHICH LIST IT IS THAT THE USER WANTS TO
@@ -132,7 +145,17 @@ class App extends React.Component {
         this.showDeleteListModal();
     }
 
-    // TODO callback to be passed to workspace for editing items in current list
+    addChangeItemTransaction = (index, oldText, newText) => {
+        let transaction = new ChangeItem_Transaction(this, index, oldText, newText);
+        this.tps.addTransaction(transaction);
+    }
+
+    addMoveItemTransaction = (oldIndex, newIndex) => {
+        let transaction = new MoveItem_Transaction(this, oldIndex, newIndex);
+        this.tps.addTransaction(transaction);
+    }
+
+    // Callback to be passed to workspace for editing items in current list
     updateCurrentListItem = (index, newText) => {
 
         // Creates copy of currentlist
@@ -200,7 +223,7 @@ class App extends React.Component {
                 />
                 <Workspace
                     currentList={this.state.currentList} 
-                    updateCurrentListItemCallback={this.updateCurrentListItem}
+                    addChangeItemCallback={this.addChangeItemTransaction}
                     swapCurrentListItemCallback={this.swapCurrentListItems}
                 />
                 <Statusbar 
