@@ -2,14 +2,21 @@ import React, { Component } from 'react';
 
 export default class DeleteModal extends Component {
     render() {
-        const { listKeyPair, hideDeleteListModalCallback } = this.props;
+
         let name = "";
-        if (listKeyPair) {
-            name = listKeyPair.name;
+
+        let className = "modal";
+        if (this.props.isVisible) {
+            className = "modal is-visible"
         }
+
+        if (this.props.listKeyPair) {
+            name = this.props.listKeyPair.name;
+        }
+
         return (
             <div
-                className="modal"
+                className={className}
                 id="delete-modal"
                 data-animation="slideInOutLeft">
                 <div className="modal-dialog">
@@ -24,7 +31,7 @@ export default class DeleteModal extends Component {
                         <button
                             id="dialog-no-button"
                             className="modal-button"
-                            onClick={hideDeleteListModalCallback}
+                            onClick={this.props.hideDeleteListModalCallback}
                         >Cancel</button>
                     </div>
                 </div>

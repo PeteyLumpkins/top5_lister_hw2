@@ -104,7 +104,7 @@ class App extends React.Component {
                 nextKey: prevState.sessionData.nextKey,
                 counter: prevState.sessionData.counter,
                 keyNamePairs: newKeyNamePairs
-            }
+            },
         }), () => {
             // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
             // THE TRANSACTION STACK IS CLEARED
@@ -120,7 +120,7 @@ class App extends React.Component {
         let newCurrentList = this.db.queryGetList(key);
         this.setState(prevState => ({
             currentList: newCurrentList,
-            sessionData: prevState.sessionData
+            sessionData: prevState.sessionData,
         }), () => {
             // ANY AFTER EFFECTS?
         });
@@ -137,7 +137,7 @@ class App extends React.Component {
         });
     }
 
-    deleteList = () => {
+    deleteList = (keyNamePair) => {
         // SOMEHOW YOU ARE GOING TO HAVE TO FIGURE OUT
         // WHICH LIST IT IS THAT THE USER WANTS TO
         // DELETE AND MAKE THAT CONNECTION SO THAT THE
@@ -161,6 +161,21 @@ class App extends React.Component {
         if (this.tps.hasTransactionToRedo()) {
             this.tps.doTransaction();
         }
+    }
+
+    handleKeyPress = (event) => {
+
+        if (event.CTRL && event.code === "Z") {
+            this.undo();
+            console.log("Undoing")
+        }
+
+        if (event.CTRL && event.code === "Y") {
+            this.redo();
+            console.log("Redoing")
+        }
+
+        console.log("Event CTRL: " + event.CTRL + " event.code: " + event.code);
     }
 
     /**
@@ -244,14 +259,21 @@ class App extends React.Component {
 
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
-    showDeleteListModal() {
-        let modal = document.getElementById("delete-modal");
-        modal.classList.add("is-visible");
+    showDeleteListModal = () => {
+        this.setState(prevState => ({
+            currentList: prevState.currentList,
+            sessionData: prevState.sessionData,
+            showDeleteModal: true
+        }));
     }
+
     // THIS FUNCTION IS FOR HIDING THE MODAL
-    hideDeleteListModal() {
-        let modal = document.getElementById("delete-modal");
-        modal.classList.remove("is-visible");
+    hideDeleteListModal = () => {
+        this.setState(prevState => ({
+            currentList: prevState.currentList,
+            sessionData: prevState.sessionData,
+            showDeleteModal: false
+        }))
     }
 
     render() {
@@ -282,6 +304,8 @@ class App extends React.Component {
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteModal
+                    isVisible={this.state.showDeleteModal}
+                    listKeyPair={this.state.currentList}
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                 />
             </div>
