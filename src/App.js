@@ -6,6 +6,8 @@ import DBManager from './db/DBManager';
 
 // THESE ARE OUR REACT COMPONENTS
 import DeleteModal from './components/DeleteModal';
+import ControlModal from './components/ControlModal';
+
 import Banner from './components/Banner.js'
 import Sidebar from './components/Sidebar.js'
 import Workspace from './components/Workspace.js';
@@ -165,17 +167,11 @@ class App extends React.Component {
 
     handleKeyPress = (event) => {
 
-        if (event.CTRL && event.code === "Z") {
-            this.undo();
-            console.log("Undoing")
-        }
+        console.log("pressing a key");
 
-        if (event.CTRL && event.code === "Y") {
-            this.redo();
-            console.log("Redoing")
+        if (event.CTRL) {
+            console.log("control click");
         }
-
-        console.log("Event CTRL: " + event.CTRL + " event.code: " + event.code);
     }
 
     /**
@@ -307,6 +303,10 @@ class App extends React.Component {
                     isVisible={this.state.showDeleteModal}
                     listKeyPair={this.state.currentList}
                     hideDeleteListModalCallback={this.hideDeleteListModal}
+                />
+                <ControlModal
+                    undoCallback={this.undo}
+                    redoCallback={this.redo}
                 />
             </div>
         );
