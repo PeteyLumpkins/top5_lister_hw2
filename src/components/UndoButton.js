@@ -1,5 +1,14 @@
 import React from 'react';
 
+/**
+ * Represents the undo button in the edit toolbar component. When pressed will
+ * undo a drag/drop or edit to the current list being edited. 
+ * 
+ * If there is no list being edited or there are no operations to undo then the 
+ * button should be disabled.
+ * 
+ * @author PeteyLumpkins
+ */
 export default class UndoButton extends React.Component {
 
     

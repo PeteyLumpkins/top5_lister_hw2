@@ -133,8 +133,7 @@ class App extends React.Component {
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             sessionData: this.state.sessionData
         }), () => {
-            // Disable undo and redo buttons 
-            // Enable add list button
+            this.tps.clearAllTransactions();
         });
     }
 
@@ -146,23 +145,42 @@ class App extends React.Component {
         this.showDeleteListModal();
     }
 
+    /**
+     * Undos an operation on the current list
+     */
     undo = () => {
         if (this.tps.hasTransactionToUndo()) {
             this.tps.undoTransaction();
         }
     }
 
+    /**
+     * Redos an operation on the current list
+     */
     redo = () => {
         if (this.tps.hasTransactionToRedo()) {
             this.tps.doTransaction();
         }
     }
 
+    /**
+     * Adds an @type {ChangeItem_Transaction} to the transaction stack
+     * 
+     * @param {integer} index - the index of the item we want to change
+     * @param {string} oldText - the previous text at the given position
+     * @param {string} newText - the new text at the given position
+     */
     addChangeItemTransaction = (index, oldText, newText) => {
         let transaction = new ChangeItem_Transaction(this, index, oldText, newText);
         this.tps.addTransaction(transaction);
     }
 
+    /**
+     * Adds an @type {MoveItem_Transaction} to the transaction stack
+     * 
+     * @param {integer} oldIndex - original position of the list item we want to move
+     * @param {integer} newIndex - new position of the item we want to move
+     */
     addMoveItemTransaction = (oldIndex, newIndex) => {
         let transaction = new MoveItem_Transaction(this, oldIndex, newIndex);
         this.tps.addTransaction(transaction);
@@ -241,6 +259,7 @@ class App extends React.Component {
             <div id="app-root">
                 <Banner 
                     title='Top 5 Lister'
+                    isCurrentListOpen={this.state.currentList !== null}
                     closeCallback={this.closeCurrentList} 
                     jstps={this.tps}
                     redoCallback={this.redo}

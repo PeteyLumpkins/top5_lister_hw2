@@ -18,7 +18,8 @@ export default class EditToolbar extends React.Component {
                     redoCallback={this.props.redoCallback}
                 />
                 <CloseButton 
-                    jstps={this.props.jstps}
+                    isCurrentListOpen={this.props.isCurrentListOpen}
+                    closeCallback={this.props.closeCallback}
                 />
             </div>
         )
