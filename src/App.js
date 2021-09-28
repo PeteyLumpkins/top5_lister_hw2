@@ -131,7 +131,7 @@ class App extends React.Component {
     // THIS FUNCTION BEGINS THE PROCESS OF CLOSING THE CURRENT LIST
     closeCurrentList = () => {
         this.tps.clearAllTransactions();
-        
+
         this.setState(prevState => ({
             currentList: null,
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
@@ -155,6 +155,7 @@ class App extends React.Component {
     undo = () => {
         if (this.tps.hasTransactionToUndo()) {
             this.tps.undoTransaction();
+            this.loadList(this.state.currentList.key);
         }
     }
 
@@ -164,15 +165,7 @@ class App extends React.Component {
     redo = () => {
         if (this.tps.hasTransactionToRedo()) {
             this.tps.doTransaction();
-        }
-    }
-
-    handleKeyPress = (event) => {
-
-        console.log("pressing a key");
-
-        if (event.CTRL) {
-            console.log("control click");
+            this.loadList(this.state.currentList.key);
         }
     }
 
@@ -186,6 +179,7 @@ class App extends React.Component {
     addChangeItemTransaction = (index, oldText, newText) => {
         let transaction = new ChangeItem_Transaction(this, index, oldText, newText);
         this.tps.addTransaction(transaction);
+        this.loadList(this.state.currentList.key);
     }
 
     /**
@@ -196,7 +190,14 @@ class App extends React.Component {
      */
     addMoveItemTransaction = (oldIndex, newIndex) => {
         let transaction = new MoveItem_Transaction(this, oldIndex, newIndex);
+        // Add transaction to transaction stack
         this.tps.addTransaction(transaction);
+
+        // tps.addTransaction calls doTransaction() -> updates state of this.tps
+
+        // this.loadlist updates the state of the list. Re-render occurs AFTER this.tps
+        // has finished it's operations
+        this.loadList(this.state.currentList.key);
     }
 
     /**
@@ -218,12 +219,6 @@ class App extends React.Component {
 
         // Update the database with the new list
         this.db.mutationUpdateList(newList);
-
-        // Set the state to that of the new list
-        this.setState(prevState => ({
-            currentList: newList,
-            sessionData: prevState.sessionData
-        }));
     }
 
     /**
@@ -249,10 +244,10 @@ class App extends React.Component {
         this.db.mutationUpdateList(newList);
 
         // Set state to the new list -> triggers the rendering of workspace with new list
-        this.setState(prevState => ({
-            currentList: newList,
-            sessionData: prevState.sessionData
-        }));
+        // this.setState(prevState => ({
+        //     currentList: newList,
+        //     sessionData: prevState.sessionData
+        // }));
     }
 
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
