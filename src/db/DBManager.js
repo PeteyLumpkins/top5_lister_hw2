@@ -21,6 +21,15 @@ export default class DBManager {
         return JSON.parse(listString);
     }
 
+    /**
+     * This mutator method removes the list with the given key from local storage
+     * 
+     * @param {integer} key the key of the list we want to delete
+     */
+    mutationRemoveList = (key) => {
+        localStorage.removeItem("top5-list-" + key);
+    }
+
     mutationCreateList = (list) => {
         this.mutationUpdateList(list);
     }

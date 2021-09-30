@@ -7,6 +7,9 @@ import reportWebVitals from './reportWebVitals';
 // DATA IN LOCAL STORAGE. IF IT DOES, TRUE IS
 // RETURNED, ELSE FALSE 
 function isInLocalStorage() {
+  // FIXME REMOVE THIS LINE -- Clears local storage
+  // localStorage.clear();
+  
   return localStorage.getItem("top5-data") != null;
 }
 

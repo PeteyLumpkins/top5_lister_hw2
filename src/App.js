@@ -33,6 +33,7 @@ class App extends React.Component {
         // SETUP THE INITIAL STATE
         this.state = {
             currentList : null,
+            deleteListKeyNamePair: null,
             sessionData : loadedSessionData
         }
     }
@@ -141,12 +142,37 @@ class App extends React.Component {
         });
     }
 
+    /**
+     * Deletes the list that the user is currently trying to delete. This list is
+     * indicated by @var deleteListKeyNamePair 
+     */
+    removeList = (keyNamePair) => {
+
+        this.db.mutationRemoveList(keyNamePair.key);
+
+        let newSessionData = this.state.sessionData;
+        
+        for (let i = 0; i < newSessionData.keyNamePairs.length; i++) {
+            if (newSessionData.keyNamePairs[i].key === keyNamePair.key) {
+                newSessionData.keyNamePairs.splice(i, 1);
+            }
+        }
+
+        this.db.mutationUpdateSessionData(newSessionData);
+
+        if (this.state.currentList !== null && keyNamePair.key === this.state.currentList.key) {
+            this.currentList = null;
+        }
+
+        this.hideDeleteListModal();
+    }
+
     deleteList = (keyNamePair) => {
         // SOMEHOW YOU ARE GOING TO HAVE TO FIGURE OUT
         // WHICH LIST IT IS THAT THE USER WANTS TO
         // DELETE AND MAKE THAT CONNECTION SO THAT THE
         // NAME PROPERLY DISPLAYS INSIDE THE MODAL
-        this.showDeleteListModal();
+        this.showDeleteListModal(keyNamePair);
     }
 
     /**
@@ -252,11 +278,11 @@ class App extends React.Component {
 
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
-    showDeleteListModal = () => {
+    showDeleteListModal = (keyNamePair) => {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             sessionData: prevState.sessionData,
-            showDeleteModal: true
+            deleteListKeyNamePair: keyNamePair
         }));
     }
 
@@ -265,7 +291,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             sessionData: prevState.sessionData,
-            showDeleteModal: false
+            deleteListKeyNamePair: null
         }))
     }
 
@@ -297,8 +323,8 @@ class App extends React.Component {
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteModal
-                    isVisible={this.state.showDeleteModal}
-                    listKeyPair={this.state.currentList}
+                    deleteListKeyNamePair={this.state.deleteListKeyNamePair}
+                    removeListCallback={this.removeList}
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                 />
                 <ControlModal
