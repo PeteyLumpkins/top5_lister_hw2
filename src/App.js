@@ -170,15 +170,14 @@ class App extends React.Component {
 
         if (this.state.currentList !== null && keyNamePair.key === this.state.currentList.key) {
             newCurrentList = null;
+            this.tps.clearAllTransactions();
         }
 
-        this.hideDeleteListModal();
-
-        // this.setState(prevState => ({
-        //     currentList: newCurrentList,
-        //     sessionData: this.db.queryGetSessionData(),
-        //     deleteListKeyNamePair: null
-        // }));
+        this.setState(prevState => ({
+            currentList: newCurrentList,
+            sessionData: this.db.queryGetSessionData(),
+            deleteListKeyNamePair: null
+        }));
     }
 
     deleteList = (keyNamePair) => {

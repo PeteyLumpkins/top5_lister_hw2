@@ -15,7 +15,7 @@ export default class RedoButton extends React.Component {
 
     render() {
 
-        if (this.props.jstps.hasTransactionToRedo()) {
+        if (this.props.jstps.hasTransactionToRedo() && this.props.currentList !== null) {
             return (
                 <div
                     id='redo-button'

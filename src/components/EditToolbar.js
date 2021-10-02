@@ -10,10 +10,12 @@ export default class EditToolbar extends React.Component {
         return (
             <div id="edit-toolbar">
                 <UndoButton 
+                    isCurrentListOpen={this.props.isCurrentListOpen}
                     jstps={this.props.jstps}
                     undoCallback={this.props.undoCallback}
                 />
                 <RedoButton 
+                    isCurrentListOpen={this.props.isCurrentListOpen}
                     jstps={this.props.jstps}
                     redoCallback={this.props.redoCallback}
                 />

@@ -18,7 +18,7 @@ export default class UndoButton extends React.Component {
 
     render() {
 
-        if (this.props.jstps.hasTransactionToUndo()) {
+        if (this.props.jstps.hasTransactionToUndo() && this.props.currentList !== null) {
             return (
                 <div 
                     id='undo-button' 
