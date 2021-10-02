@@ -81,6 +81,7 @@ class App extends React.Component {
             // PUTTING THIS NEW LIST IN PERMANENT STORAGE
             // IS AN AFTER EFFECT
             this.db.mutationCreateList(newList);
+            this.db.mutationUpdateSessionData(this.state.sessionData)
         });
     }
 
@@ -115,6 +116,9 @@ class App extends React.Component {
             list.name = newName;
             this.db.mutationUpdateList(list);
             this.db.mutationUpdateSessionData(this.state.sessionData);
+
+
+            this.tps.clearAllTransactions();
         });
     }
 
@@ -125,7 +129,10 @@ class App extends React.Component {
             currentList: newCurrentList,
             sessionData: prevState.sessionData,
         }), () => {
-            // ANY AFTER EFFECTS?
+            // Clears transaction stack when we load a new list
+            if (key !== this.state.currentList.key) {
+                this.tps.clearAllTransactions();
+            }
         });
     }
 
@@ -151,7 +158,8 @@ class App extends React.Component {
         this.db.mutationRemoveList(keyNamePair.key);
 
         let newSessionData = this.state.sessionData;
-        
+        let newCurrentList = this.state.currentList;
+
         for (let i = 0; i < newSessionData.keyNamePairs.length; i++) {
             if (newSessionData.keyNamePairs[i].key === keyNamePair.key) {
                 newSessionData.keyNamePairs.splice(i, 1);
@@ -161,10 +169,16 @@ class App extends React.Component {
         this.db.mutationUpdateSessionData(newSessionData);
 
         if (this.state.currentList !== null && keyNamePair.key === this.state.currentList.key) {
-            this.currentList = null;
+            newCurrentList = null;
         }
 
         this.hideDeleteListModal();
+
+        // this.setState(prevState => ({
+        //     currentList: newCurrentList,
+        //     sessionData: this.db.queryGetSessionData(),
+        //     deleteListKeyNamePair: null
+        // }));
     }
 
     deleteList = (keyNamePair) => {

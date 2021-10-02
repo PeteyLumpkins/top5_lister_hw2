@@ -22,6 +22,7 @@ export default class EditItems extends React.Component {
                     ids.map((id) => (
                         <EditItem 
                             id={id} 
+                            key={id}
                             text={this.props.currentList.items[id - 1]}
                             addChangeItemCallback={this.props.addChangeItemCallback}
                             addMoveItemCallback={this.props.addMoveItemCallback}
