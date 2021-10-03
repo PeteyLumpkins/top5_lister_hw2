@@ -70,6 +70,10 @@ class App extends React.Component {
         // FORCE A CALL TO render, BUT THIS UPDATE IS ASYNCHRONOUS,
         // SO ANY AFTER EFFECTS THAT NEED TO USE THIS UPDATED STATE
         // SHOULD BE DONE VIA ITS CALLBACK
+
+        // Clear all transactions before setting the new list
+        this.tps.clearAllTransactions();
+
         this.setState(prevState => ({
             currentList: newList,
             sessionData: {
@@ -116,23 +120,21 @@ class App extends React.Component {
             list.name = newName;
             this.db.mutationUpdateList(list);
             this.db.mutationUpdateSessionData(this.state.sessionData);
-
-
-            this.tps.clearAllTransactions();
         });
     }
 
     // THIS FUNCTION BEGINS THE PROCESS OF LOADING A LIST FOR EDITING
     loadList = (key) => {
         let newCurrentList = this.db.queryGetList(key);
+        if (this.state.currentList !== null && key != this.state.currentList.key) {
+            this.tps.clearAllTransactions();
+        }
+
         this.setState(prevState => ({
             currentList: newCurrentList,
             sessionData: prevState.sessionData,
         }), () => {
             // Clears transaction stack when we load a new list
-            if (key !== this.state.currentList.key) {
-                this.tps.clearAllTransactions();
-            }
         });
     }
 
